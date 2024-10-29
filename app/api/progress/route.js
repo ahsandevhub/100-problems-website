@@ -1,16 +1,21 @@
-import fs from "fs";
-import path from "path";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "./firebaseConfig";
 
-const dataFilePath = path.join(process.cwd(), "public", "data.json");
-
-export async function GET(req) {
+export async function GET() {
   try {
-    const data = await fs.promises.readFile(dataFilePath, "utf8");
-    const jsonData = JSON.parse(data);
-    return new Response(JSON.stringify(jsonData), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    const docRef = doc(db, "progressData", "userProgress");
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return new Response(JSON.stringify(docSnap.data()), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    } else {
+      return new Response(JSON.stringify({ error: "No data found" }), {
+        status: 404,
+      });
+    }
   } catch (err) {
     console.error("Error reading data:", err);
     return new Response(JSON.stringify({ error: "Error reading data" }), {
@@ -24,11 +29,9 @@ export async function POST(req) {
     const body = await req.json();
     const newProgress = body.progress;
 
-    await fs.promises.writeFile(
-      dataFilePath,
-      JSON.stringify({ progress: newProgress }, null, 2),
-      "utf8"
-    );
+    await setDoc(doc(db, "progressData", "userProgress"), {
+      progress: newProgress,
+    });
     return new Response(
       JSON.stringify({ message: "Progress saved successfully" }),
       { status: 200 }
