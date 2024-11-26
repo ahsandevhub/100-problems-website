@@ -7,7 +7,7 @@ import { MdOutlineDoneAll } from "react-icons/md";
 export default function Home() {
   const [progress, setProgress] = useState(Array(30).fill(0)); // Initialize with 30 days of progress
   const [totalSolved, setTotalSolved] = useState(0);
-  const startDate = new Date("2024-11-28");
+  const startDate = new Date("2024-11-27");
   const today = new Date();
 
   useEffect(() => {
