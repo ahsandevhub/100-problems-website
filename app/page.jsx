@@ -7,12 +7,8 @@ import { MdOutlineDoneAll } from "react-icons/md";
 export default function Home() {
   const [progress, setProgress] = useState(Array(30).fill(0)); // Initialize with 30 days of progress
   const [totalSolved, setTotalSolved] = useState(0);
-  const startDate = new Date("2024-11-27");
+  const startDate = new Date("2024-11-28");
   const today = new Date();
-
-  // Adding 1 day to today's date
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 1);
 
   useEffect(() => {
     // Load initial progress data
@@ -70,11 +66,6 @@ export default function Home() {
       today.getMonth(),
       today.getDate()
     );
-    const normalizedTomorrow = new Date(
-      tomorrow.getFullYear(),
-      tomorrow.getMonth(),
-      tomorrow.getDate()
-    );
 
     if (normalizedDate < normalizedToday) {
       return "bg-orange-50 shadow-orange-600/50 border-orange-500 *:border-orange-500 text-orange-500 *:text-orange-500"; // Past dates
@@ -82,10 +73,6 @@ export default function Home() {
       normalizedDate.toDateString() === normalizedToday.toDateString()
     ) {
       return "bg-green-50 border-2 scale-105 shadow-green-600/50 border-green-500 *:border-green-500 text-green-600 *:text-green-600"; // Today's date
-    } else if (
-      normalizedDate.toDateString() === normalizedTomorrow.toDateString()
-    ) {
-      return "bg-blue-50 border-2 scale-105 shadow-blue-600/50 border-blue-500 *:border-blue-500 text-blue-600 *:text-blue-600"; // Tomorrow's date
     }
     return "bg-white opacity-50 cursor-not-allowed"; // Future dates
   };
@@ -113,7 +100,6 @@ export default function Home() {
 
           // Normalize date for comparison
           const isToday = date.toDateString() === today.toDateString();
-          const isTomorrow = date.toDateString() === tomorrow.toDateString();
           const isPassed = date < today;
 
           return (
